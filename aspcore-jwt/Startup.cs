@@ -1,4 +1,5 @@
 using aspcore_jwt.Authentication;
+using aspcore_jwt.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,8 @@ namespace aspcore_jwt
 
             // For Entity Framework  
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnStr")));
+            services.AddDbContext<EmployeeDB2Context>(options => options.UseSqlServer
+              (Configuration.GetConnectionString("EmployeeDB2Connection")));
 
             // For Identity  
             services.AddIdentity<ApplicationUser, IdentityRole>()
