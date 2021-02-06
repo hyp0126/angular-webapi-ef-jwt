@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using aspcore_jwt.Models;
+using System.Net.Http;
+using System.Net;
 
 namespace aspcore_jwt.Controllers
 {
@@ -105,5 +107,34 @@ namespace aspcore_jwt.Controllers
         {
             return _context.Employees.Any(e => e.EmployeeId == id);
         }
+
+        //[System.Web.Http.Route("api/Employees/GetAllDepartmentNames")]
+        //[System.Web.Http.HttpGet]
+        //public HttpResponseMessage GetAllDepartmentNames()
+        //{
+        //    var results = db.Departments.Select(d => new { DepartmentName = d.DepartmentName }).ToList();
+        //    return Request.CreateResponse(HttpStatusCode.OK, results, Configuration.Formatters.JsonFormatter);
+        //}
+
+        //[System.Web.Http.Route("api/Employees/SaveFile")]
+        //public string SaveFile()
+        //{
+        //    try
+        //    {
+        //        var httpRequest = System.Web.HttpContext.Current.Request;
+        //        var postedFile = httpRequest.Files[0];
+        //        string filename = postedFile.FileName;
+        //        var physicalPath = System.Web.HttpContext.Current.Server.MapPath("~/Photos/" + filename);
+
+        //        postedFile.SaveAs(physicalPath);
+
+        //        return filename;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return "anonymous.png";
+        //    }
+        //}
     }
 }
