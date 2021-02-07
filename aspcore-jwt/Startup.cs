@@ -39,7 +39,7 @@ namespace aspcore_jwt
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             // For Entity Framework  
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnStr")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserDB2Connection")));
             services.AddDbContext<EmployeeDB2Context>(options => options.UseSqlServer
               (Configuration.GetConnectionString("EmployeeDB2Connection")));
 

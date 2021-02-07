@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using aspcore_jwt.Models;
 using System.Net.Http;
 using System.Net;
+using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aspcore_jwt.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -46,13 +49,15 @@ namespace aspcore_jwt.Controllers
         // PUT: api/Employee/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployees(int id, Employees employees)
+        //[HttpPut("{id}")]
+        [HttpPut]
+//        public async Task<IActionResult> PutEmployees(int id, Employees employees)
+        public async Task<IActionResult> PutEmployees(Employees employees)
         {
-            if (id != employees.EmployeeId)
-            {
-                return BadRequest();
-            }
+            //if (id != employees.EmployeeId)
+            //{
+            //    return BadRequest();
+            //}
 
             _context.Entry(employees).State = EntityState.Modified;
 
@@ -62,7 +67,8 @@ namespace aspcore_jwt.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeesExists(id))
+                //if (!EmployeesExists(id))
+                if (!EmployeesExists(employees.EmployeeId))
                 {
                     return NotFound();
                 }
@@ -108,33 +114,51 @@ namespace aspcore_jwt.Controllers
             return _context.Employees.Any(e => e.EmployeeId == id);
         }
 
-        //[System.Web.Http.Route("api/Employees/GetAllDepartmentNames")]
-        //[System.Web.Http.HttpGet]
-        //public HttpResponseMessage GetAllDepartmentNames()
-        //{
-        //    var results = db.Departments.Select(d => new { DepartmentName = d.DepartmentName }).ToList();
-        //    return Request.CreateResponse(HttpStatusCode.OK, results, Configuration.Formatters.JsonFormatter);
-        //}
+        [Route("GetAllDepartmentNames")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Departments>>> GetAllDepartmentNames()
+        {
+            //return await _context.Departments.Select(d => new { DepartmentName = d.DepartmentName }).ToListAsync();
+            return await _context.Departments.ToListAsync();
+        }
 
-        //[System.Web.Http.Route("api/Employees/SaveFile")]
-        //public string SaveFile()
-        //{
-        //    try
-        //    {
-        //        var httpRequest = System.Web.HttpContext.Current.Request;
-        //        var postedFile = httpRequest.Files[0];
-        //        string filename = postedFile.FileName;
-        //        var physicalPath = System.Web.HttpContext.Current.Server.MapPath("~/Photos/" + filename);
+        //[Route("Photos")]
+        [HttpGet("Photos/{id}")]
+        public async Task<IActionResult> Download(string id)
+        {
+            var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
+            var filename = Path.Combine(directory, id);
+            var mimeType = "application/octet-stream";
+            //var mimeType = "image/png";
+            var stream = new FileStream(filename, FileMode.Open);
 
-        //        postedFile.SaveAs(physicalPath);
+            if (stream == null)
+                return NotFound(); // returns a NotFoundResult with Status404NotFound response.
 
-        //        return filename;
-        //    }
-        //    catch (Exception)
-        //    {
+            return File(stream, mimeType); // returns a FileStreamResult
+        }
 
-        //        return "anonymous.png";
-        //    }
-        //}
+        [Route("SaveFile")]
+        [HttpPost]
+        public string SaveFile()
+        {
+            try
+            {
+                var postedFile = Request.Form.Files[0];
+                string filename = postedFile.FileName;
+                var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
+                var physicalPath = Path.Combine(directory, filename);
+
+                using (var stream = new FileStream(physicalPath, FileMode.Create))
+                {
+                    postedFile.CopyTo(stream);
+                }
+                return $"\"{filename}\"";
+            }
+            catch (Exception)
+            {
+                return "anonymous.png";
+            }
+        }
     }
 }

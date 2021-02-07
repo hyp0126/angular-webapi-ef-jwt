@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using aspcore_jwt.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace aspcore_jwt.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
@@ -44,13 +46,15 @@ namespace aspcore_jwt.Controllers
         // PUT: api/Department/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDepartments(int id, Departments departments)
+        //[HttpPut("{id}")]
+        [HttpPut]
+//        public async Task<IActionResult> PutDepartments(int id, Departments departments)
+        public async Task<IActionResult> PutDepartments(Departments departments)
         {
-            if (id != departments.DepartmentId)
-            {
-                return BadRequest();
-            }
+            //if (id != departments.DepartmentId)
+            //{
+            //    return BadRequest();
+            //}
 
             _context.Entry(departments).State = EntityState.Modified;
 
@@ -60,7 +64,8 @@ namespace aspcore_jwt.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DepartmentsExists(id))
+                //if (!DepartmentsExists(id))
+                if (!DepartmentsExists(departments.DepartmentId))
                 {
                     return NotFound();
                 }
