@@ -70,6 +70,8 @@ export class AddEditEmpComponent implements OnInit {
     this.service.UploadPhoto(formData).subscribe((data:any)=>{
       this.PhotoFileName=data.toString();
       this.PhotoFilePath=this.service.PhotoUrl+this.PhotoFileName;
+
+      console.log(this.PhotoFileName);
     })
   }
 

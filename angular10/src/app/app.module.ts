@@ -9,10 +9,18 @@ import { AddEditDepComponent } from './department/add-edit-dep/add-edit-dep.comp
 import { EmployeeComponent } from './employee/employee.component';
 import { ShowEmpComponent } from './employee/show-emp/show-emp.component';
 import { AddEditEmpComponent } from './employee/add-edit-emp/add-edit-emp.component';
-import{SharedService} from './shared.service';
+import{ SharedService } from './shared.service';
 
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
+import { LoginComponent } from './login/login.component';
+
+import { JwtInterceptor } from './interceptor/jwt-interceptor.interceptor';
+import { ErrorInterceptor } from './interceptor/error-interceptor.interceptor';
+
+import { AuthorizationCheckService } from './services/authorization-check.service'
+import { AuthenticationService } from './services/authentication.service';
+import { LogoutComponent } from './login/logout.component'
 
 @NgModule({
   declarations: [
@@ -22,7 +30,9 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
     AddEditDepComponent,
     EmployeeComponent,
     ShowEmpComponent,
-    AddEditEmpComponent
+    AddEditEmpComponent,
+    LoginComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +41,13 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [SharedService],
+  providers: [
+    SharedService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    AuthorizationCheckService, 
+    AuthenticationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
