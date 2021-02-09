@@ -20,7 +20,8 @@ import { ErrorInterceptor } from './interceptor/error-interceptor.interceptor';
 
 import { AuthorizationCheckService } from './services/authorization-check.service'
 import { AuthenticationService } from './services/authentication.service';
-import { LogoutComponent } from './login/logout.component'
+import { LogoutComponent } from './login/logout.component';
+import { AuthImagePipe } from './auth-image.pipe'
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { LogoutComponent } from './login/logout.component'
     ShowEmpComponent,
     AddEditEmpComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    AuthImagePipe
   ],
   imports: [
     BrowserModule,

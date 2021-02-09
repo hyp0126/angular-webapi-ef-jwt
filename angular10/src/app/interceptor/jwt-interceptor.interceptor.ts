@@ -21,8 +21,8 @@ export class JwtInterceptor implements HttpInterceptor {
     if (tokenInfo && tokenInfo.token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${tokenInfo.token}`,
-          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+          Authorization: `Bearer ${tokenInfo.token}`//,
+//          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       });
     }
