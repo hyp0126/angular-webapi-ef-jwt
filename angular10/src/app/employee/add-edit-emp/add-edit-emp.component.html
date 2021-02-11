@@ -25,8 +25,9 @@
 
 </div>
 <div class="ml-3 bd-highlight" style="width: 40%;">
-<img [src]="PhotoFilePath | authImage | async" height="250px;" width="200px;">
-<input type="file" (change)="uploadPhoto($event)" class="mt-2"/>
+    <img [src]="PhotoFilePath | authImage | async" height="250px;" width="200px;">
+    <input type="file" (change)="uploadPhoto($event)" class="mt-2" multiple/><br/>
+    <img *ngFor='let url of urls' [src] = "url" height="50"><br/>
 </div>
 </div>
 

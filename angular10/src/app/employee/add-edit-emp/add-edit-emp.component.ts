@@ -61,12 +61,18 @@ export class AddEditEmpComponent implements OnInit {
     });
   }
 
-
+  urls=[];
   uploadPhoto(event){
-    var file=event.target.files[0];
+    // var file=event.target.files[0];
+    // const formData:FormData=new FormData();
+    // formData.append('file',file,file.name);
+
+    var files = event.target.files;
     const formData:FormData=new FormData();
-    formData.append('file',file,file.name);
-    
+    for (let i = 0; i < files.length; i++)
+    {
+      formData.append(files[i].name, files[i]);
+    }
     //console.log(file + file.name);
 
     this.service.UploadPhoto(formData).subscribe((data:any)=>{
@@ -75,6 +81,17 @@ export class AddEditEmpComponent implements OnInit {
 
       //console.log(this.PhotoFileName);
     })
+
+    // Display images (uploaded)
+    if (event.target.files) {
+      for (let i=0; i<files.length; i++){
+        var reader = new FileReader();
+        reader.readAsDataURL(event.target.files[i]);
+        reader.onload=(events:any)=>{
+          this.urls.push(events.target.result);
+        }
+      }
+    }
   }
 
 }

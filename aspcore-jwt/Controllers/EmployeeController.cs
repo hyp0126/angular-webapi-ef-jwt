@@ -138,22 +138,54 @@ namespace aspcore_jwt.Controllers
             return File(stream, mimeType); // returns a FileStreamResult
         }
 
+        //Single File
+        //[Route("SaveFile")]
+        //[HttpPost]
+        //public string SaveFile()
+        //{
+        //    try
+        //    {
+        //        var postedFile = Request.Form.Files[0];
+        //        string filename = postedFile.FileName;
+        //        var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
+        //        var physicalPath = Path.Combine(directory, filename);
+
+        //        using (var stream = new FileStream(physicalPath, FileMode.Create))
+        //        {
+        //            postedFile.CopyTo(stream);
+        //        }
+        //        return $"\"{filename}\"";
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return "anonymous.png";
+        //    }
+        //}
+
+
+        // Multiple files
         [Route("SaveFile")]
         [HttpPost]
         public string SaveFile()
         {
             try
             {
-                var postedFile = Request.Form.Files[0];
-                string filename = postedFile.FileName;
+                var postedFiles = Request.Form.Files;
                 var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
-                var physicalPath = Path.Combine(directory, filename);
 
-                using (var stream = new FileStream(physicalPath, FileMode.Create))
+                for (int i = 0; i < Request.Form.Files.Count; i++)
                 {
-                    postedFile.CopyTo(stream);
+                    string filename = postedFiles[i].FileName;
+                    var physicalPath = Path.Combine(directory, filename);
+
+                    using (var stream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        postedFiles[i].CopyTo(stream);
+                    }
                 }
-                return $"\"{filename}\"";
+
+                // return first file name
+                return $"\"{postedFiles[0].FileName}\"";
             }
             catch (Exception)
             {
