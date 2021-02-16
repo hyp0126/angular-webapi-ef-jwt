@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Net;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace aspcore_jwt.Controllers
 {
@@ -19,10 +21,12 @@ namespace aspcore_jwt.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeDB2Context _context;
+        BlobServiceClient _blobServiceClient;
 
-        public EmployeeController(EmployeeDB2Context context)
+        public EmployeeController(EmployeeDB2Context context, BlobServiceClient blobServiceClient)
         {
             _context = context;
+            _blobServiceClient = blobServiceClient;
         }
 
         // GET: api/Employee
@@ -122,15 +126,32 @@ namespace aspcore_jwt.Controllers
             return await _context.Departments.ToListAsync();
         }
 
-        //[Route("Photos")]
         [HttpGet("Photos/{id}")]
         public async Task<IActionResult> Download(string id)
         {
             var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
             var filename = Path.Combine(directory, id);
             var mimeType = "application/octet-stream";
-            //var mimeType = "image/png";
-            var stream = new FileStream(filename, FileMode.Open);
+
+            // Local
+            //var stream = new FileStream(filename, FileMode.Open);
+
+            // Azure Storage
+            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient("photos");
+            Stream stream = null;
+            
+            if (await containerClient.ExistsAsync())
+            {
+                BlobClient blobClient = containerClient.GetBlobClient(id);
+
+                if (await blobClient.ExistsAsync())
+                {
+                    stream = new MemoryStream();
+                    BlobDownloadInfo download = await blobClient.DownloadAsync();
+                    await download.Content.CopyToAsync(stream);
+                    stream.Seek(0, SeekOrigin.Begin);
+                }
+            }
 
             if (stream == null)
                 return NotFound(); // returns a NotFoundResult with Status404NotFound response.
@@ -166,12 +187,17 @@ namespace aspcore_jwt.Controllers
         // Multiple files
         [Route("SaveFile")]
         [HttpPost]
-        public string SaveFile()
+        async public Task<string> SaveFile()
         {
             try
             {
                 var postedFiles = Request.Form.Files;
                 var directory = Path.Combine(Directory.GetCurrentDirectory(), "Photos");
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
                 for (int i = 0; i < Request.Form.Files.Count; i++)
                 {
@@ -180,7 +206,13 @@ namespace aspcore_jwt.Controllers
 
                     using (var stream = new FileStream(physicalPath, FileMode.Create))
                     {
-                        postedFiles[i].CopyTo(stream);
+                        // Local
+                        //postedFiles[i].CopyTo(stream);
+
+                        // Azure Storage
+                        BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient("photos");
+                        BlobClient blobClient = containerClient.GetBlobClient(filename);
+                        await blobClient.UploadAsync(postedFiles[i].OpenReadStream(), true);
                     }
                 }
 

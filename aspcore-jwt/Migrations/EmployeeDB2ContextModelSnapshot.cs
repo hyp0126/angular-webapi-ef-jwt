@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aspcore_jwt.Models;
 
-namespace aspcore_jwt.Migrations.EmployeeDB2
+namespace aspcore_jwt.Migrations
 {
     [DbContext(typeof(EmployeeDB2Context))]
-    [Migration("20210212032909_item")]
-    partial class item
+    partial class EmployeeDB2ContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

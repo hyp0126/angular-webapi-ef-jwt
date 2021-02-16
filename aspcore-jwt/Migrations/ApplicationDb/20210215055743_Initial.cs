@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace aspcore_jwt.Migrations
+namespace aspcore_jwt.Migrations.ApplicationDb
 {
     public partial class Initial : Migration
     {
