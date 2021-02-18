@@ -1,20 +1,3 @@
 {
-  "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "UserDB2Connection"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "EmployeeDB2Connection"
-    },
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": null
-    },
-    "storage2": {
-      "type": "storage",
-      "connectionId": "PhoenixFileBlobConnection"
-    }
-  }
+  "dependencies": {}
 }

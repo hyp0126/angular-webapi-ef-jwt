@@ -1,38 +1,4 @@
 {
-  "dependencies": {
-    "secrets1": {
-      "restored": true,
-      "restoreTime": "2021-02-15T07:27:18.3592185Z"
-    },
-    "mssql2": {
-      "restored": true,
-      "restoreTime": "2021-02-15T07:29:37.6578706Z"
-    },
-    "mssql1": {
-      "restored": true,
-      "restoreTime": "2021-02-15T07:28:36.0238477Z"
-    }
-  },
-  "parameters": {
-    "mssql2.subscriptionId": {
-      "Name": "mssql2.subscriptionId",
-      "Type": "subscription",
-      "Value": "6519a3e8-cca9-4c7a-b1c3-4e638060b01a"
-    },
-    "mssql2.resourceGroupName": {
-      "Name": "mssql2.resourceGroupName",
-      "Type": "resourceGroup",
-      "Value": "PhoenixResourceGroup"
-    },
-    "mssql1.subscriptionId": {
-      "Name": "mssql1.subscriptionId",
-      "Type": "subscription",
-      "Value": "6519a3e8-cca9-4c7a-b1c3-4e638060b01a"
-    },
-    "mssql1.resourceGroupName": {
-      "Name": "mssql1.resourceGroupName",
-      "Type": "resourceGroup",
-      "Value": "PhoenixResourceGroup"
-    }
-  }
+  "dependencies": {},
+  "parameters": {}
 }
